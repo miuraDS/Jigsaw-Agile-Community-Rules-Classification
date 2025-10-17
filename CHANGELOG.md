@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-17 23:35:52 JST] - Complete Fixed Notebook with Ensemble
+
+### Fixed
+- **Missing ensemble pipeline**: Previous FIXED notebook only ran Qwen 0.5B, missing 14B and embeddings models
+- **Wrong output filename**: Changed final output from `/kaggle/working/submission.csv` to `submission.csv` (Kaggle expects this exact name in working directory)
+- Complete 3-model ensemble now included: Qwen 0.5B + Qwen 14B + Qwen3 Embeddings
+
+### Added
+- `src/test-on testdataset+qwenemdding+llama lr-v2-FIXED-COMPLETE.py` - Complete fixed script with all models
+- `notebooks/test-on testdataset+qwenemdding+llama lr-v2-FIXED-COMPLETE.ipynb` - Complete fixed notebook
+
+### Root Cause of "Submission CSV Not Found" Error
+1. **Incomplete pipeline**: Only ran first model, never created final ensemble
+2. **Wrong path**: Saved to `/kaggle/working/submission.csv` instead of `submission.csv` in current directory
+3. Kaggle expects `submission.csv` in the notebook's working directory
+
+### Solution
+- Added all missing cells from original v2 (Qwen 14B inference, Qwen3 embeddings, ensemble blending)
+- Changed output path from `/kaggle/working/submission.csv` to `submission.csv`
+- Maintained all row_id preservation fixes from previous version
+
 ## [2025-10-17 13:40:08 JST] - Critical Bug Fix: row_id Preservation
 
 ### Fixed

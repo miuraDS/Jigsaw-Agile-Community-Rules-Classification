@@ -1,16 +1,16 @@
 # Target file
-- notebooks/[LB 0.916] Preprocessing + Qwen Hybrid Ensemble.ipynb
+- test-on testdataset+qwenemdding+llama lr-v2-FIXED.ipynb
 
 # Target function/class
 -
 # Question
--
+-　After submitting test-on testdataset+qwenemdding+llama lr-v2-FIXED.ipynb, the following error occurred — do you know the cause?
+
 
 
 
 # Instructions
-- If there are any parts of notebooks/[LB 0.916] Preprocessing + Qwen Hybrid Ensemble.ipynb that should be improved, please make those improvements. In this context, “improvement” refers to increasing accuracy.
-
+-
 
 
 
@@ -22,7 +22,7 @@
 
 
 # Errors
-
+- Submission CSV Not Found: Your notebook did not output the expected submission file (often submission.csv). The rerun of your notebook appears to have completed, but when we looked for your submission file, it wasn't there. This means it's possible to have bugs/errors upstream that halted execution and prevented the file from being written. Attempting to read a non-existent directory/file from a dataset is a common reason execution is halted (causing either Submission CSV Not Found or Notebook Threw Exception).
 
 
 # Goal
