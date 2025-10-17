@@ -1,18 +1,23 @@
 # Target file
-- src/test-on testdataset+qwenemdding+llama lr.py
--
+- snotebooks/(EDA + TF-IDF + LLM + Ensemble + score˜0.90_read.ipynb
+- notebooks/[LB 0.916] Preprocessing + Qwen Hybrid Ensemble.ipynb
+- notebooks/test-on testdataset+qwenemdding+llama lr-v2.ipynb
 
 # Target function/class
 -
 # Question
--
+- In Kaggle, the file notebooks/test-on testdataset+qwenemdding+llama lr-v2.ipynb produced a Submission Scoring Error.
+The following files produced valid scores:
+- notebooks/(EDA + TF-IDF + LLM + Ensemble + score˜0.90_read.ipynb)
+- notebooks/[LB 0.916] Preprocessing + Qwen Hybrid Ensemble.ipynb
+
+No errors occurred in either of those notebooks.
+Do you know the cause?
+
 
 
 # Instructions
-- This is a directory for managing experiments in a Kaggle project.
-Create a file to store experiment results.
-I think Markdown would be a good choice.
- Record that the score (column-averaged AUC) of notebooks/test-on testdataset+qwenemdding+llama lr.ipynb (notebooks/test-on testdataset+qwenemdding+llama lr.py) was 0.916.
+-
 
 
 
