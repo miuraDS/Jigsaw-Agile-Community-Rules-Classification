@@ -76,12 +76,25 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 
 ---
 
+### Experiment 3: Preprocessing + Qwen Hybrid Ensemble (Leaderboard Run)
+**Date**: N/A
+**Version**: Hybrid Ensemble
+**Notebook**: `notebooks/[LB 0.916] Preprocessing + Qwen Hybrid Ensemble.ipynb`
+**Score (Column-averaged AUC)**: **0.915**
+
+#### Notes:
+- Kaggle leaderboard-style preprocessing pipeline with Qwen hybrid ensemble
+- Score recorded from the referenced notebook run
+
+---
+
 ## Performance History
 
 | Date | Notebook/Script | Version | Score (AUC) | Notes |
 |------|----------------|---------|-------------|-------|
 | 2025-10-15 | test-on testdataset+qwenemdding+llama lr | Original | 0.916 | Baseline with ensemble |
 | 2025-10-15 | test-on testdataset+qwenemdding+llama lr-v2 | V2 | TBD (0.98+) | Enhanced with TTA + improvements |
+| N/A | [LB 0.916] Preprocessing + Qwen Hybrid Ensemble | Hybrid Ensemble | 0.915 | Kaggle-style preprocessing + Qwen hybrid ensemble |
 
 ---
 

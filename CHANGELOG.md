@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-17 13:40:08 JST] - Critical Bug Fix: row_id Preservation
+
+### Fixed
+- **Critical bug causing Kaggle submission errors**: Fixed `row_id` column being dropped during dataset processing
+- Modified `utils.py::build_dataset()` to preserve `row_id` when it exists in test data
+- Updated `inference.py` to correctly retrieve `row_id` from processed dataset instead of original dataframe
+- This fix resolves the "Submission Scoring Error" that occurred in the v2 notebook
+
+### Added
+- `src/test-on testdataset+qwenemdding+llama lr-v2-FIXED.py` - Fixed Python script
+- `notebooks/test-on testdataset+qwenemdding+llama lr-v2-FIXED.ipynb` - Fixed notebook
+
+### Root Cause
+- The `build_dataset()` function was only keeping `prompt` and `completion` columns, dropping all others including `row_id`
+- This caused the inference code to fail when trying to access `df_slice["row_id"].values`
+- Working notebooks (LB 0.916 and EDA+TF-IDF) avoided this by not using `build_dataset()` for test data
+
+### Technical Details
+- Added logic to detect and preserve `row_id` column before dataset transformation
+- Modified both `run_inference_on_device()` and `run_tta_inference()` to use dataset's `row_id` instead of original dataframe
+- Ensures compatibility with Kaggle's submission format requirements
+
 ## [2025-10-15 22:02:41 JST] - Version Separation: Original vs V2
 
 ### Added
@@ -101,3 +123,13 @@ All notable changes to this project will be documented in this file.
 - Unhandled exceptions in worker processes
 - Missing validation for empty DataFrames
 - Resource leaks from GPU memory
+## [2025-10-17 20:27:20 JST] - Accuracy Improvements for LB 0.916 Notebook
+
+### Improved
+- Expanded pseudo-labeled augmentation to use the full test set when building LoRA training data and semantic corpus
+- Added deterministic multi-example TTA with probability averaging to `inference.py` for stabler Qwen 0.5B predictions
+- Refined semantic search scoring with temperature-controlled softmax weighting for more discriminative logits
+
+### Added
+- New `SEMANTIC_TEMPERATURE` constant to tune embedding-based probability sharpening
+

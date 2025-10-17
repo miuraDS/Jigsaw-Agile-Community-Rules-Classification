@@ -1,23 +1,16 @@
 # Target file
-- snotebooks/(EDA + TF-IDF + LLM + Ensemble + score˜0.90_read.ipynb
 - notebooks/[LB 0.916] Preprocessing + Qwen Hybrid Ensemble.ipynb
-- notebooks/test-on testdataset+qwenemdding+llama lr-v2.ipynb
 
 # Target function/class
 -
 # Question
-- In Kaggle, the file notebooks/test-on testdataset+qwenemdding+llama lr-v2.ipynb produced a Submission Scoring Error.
-The following files produced valid scores:
-- notebooks/(EDA + TF-IDF + LLM + Ensemble + score˜0.90_read.ipynb)
-- notebooks/[LB 0.916] Preprocessing + Qwen Hybrid Ensemble.ipynb
-
-No errors occurred in either of those notebooks.
-Do you know the cause?
+-
 
 
 
 # Instructions
--
+- If there are any parts of notebooks/[LB 0.916] Preprocessing + Qwen Hybrid Ensemble.ipynb that should be improved, please make those improvements. In this context, “improvement” refers to increasing accuracy.
+
 
 
 
@@ -33,7 +26,7 @@ Do you know the cause?
 
 
 # Goal
-- Safe operation
+- Accuracy improvement in Kaggle competitions
 
 
 # Other Notes
