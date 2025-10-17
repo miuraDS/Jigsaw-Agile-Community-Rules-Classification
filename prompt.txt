@@ -1,0 +1,40 @@
+# Target file
+- src/test-on testdataset+qwenemdding+llama lr.py
+-
+
+# Target function/class
+-
+# Question
+-
+
+
+# Instructions
+- This is a directory for managing experiments in a Kaggle project.
+Create a file to store experiment results.
+I think Markdown would be a good choice.
+ Record that the score (column-averaged AUC) of notebooks/test-on testdataset+qwenemdding+llama lr.ipynb (notebooks/test-on testdataset+qwenemdding+llama lr.py) was 0.916.
+
+
+
+
+# Code
+
+
+# Log
+
+
+# Errors
+
+
+
+# Goal
+- Safe operation
+
+
+# Other Notes
+- When you change the repository, append a timestamped entry to CHANGELOG.md.
+- Push your commits after making changes when appropriate.
+
+# Notes I want you to ignore.
+- I have written a new prompt in prompt.txt, so please reload it and implement accordingly.
+

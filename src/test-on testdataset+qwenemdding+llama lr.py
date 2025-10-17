@@ -6,7 +6,9 @@ DATA_PATH = "/kaggle/input/jigsaw-agile-community-rules/"
 POSITIVE_ANSWER = "Yes"
 NEGATIVE_ANSWER = "No"
 COMPLETE_PHRASE = "Answer:"
-BASE_PROMPT = '''You are given a comment from reddit and a rule. Your task is to classify whether the comment violates the rule. Only respond Yes/No.'''\n# --- new cell ---\n%%writefile utils.py
+BASE_PROMPT = '''You are given a comment from reddit and a rule. Your task is to classify whether the comment violates the rule. Only respond Yes/No.'''
+# --- new cell ---
+%%writefile utils.py
 import pandas as pd
 from datasets import Dataset
 from constants import POSITIVE_ANSWER, NEGATIVE_ANSWER, COMPLETE_PHRASE, BASE_PROMPT
@@ -35,54 +37,76 @@ Comment: {row["body"]}
 
 def get_dataframe_to_train(data_path):
     train_dataset = pd.read_csv(f"{data_path}/train.csv")
-    
+    test_dataset = pd.read_csv(f"{data_path}/test.csv").sample(frac=0.5, random_state=42).reset_index(drop=True)
+
     flatten = []
 
-    # Process the main training data
-    main_train_df = train_dataset[["body", "rule", "subreddit", "rule_violation"]].copy()
-    main_train_df["positive_example"] = train_dataset["positive_example_1"]
-    main_train_df["negative_example"] = train_dataset["negative_example_1"]
-    flatten.append(main_train_df)
+    # ---------- 处理训练集 ----------
+    train_df = train_dataset[["body", "rule", "subreddit", "rule_violation",
+                              "positive_example_1","positive_example_2",
+                              "negative_example_1","negative_example_2"]].copy()
 
-    main_train_df_2 = train_dataset[["body", "rule", "subreddit", "rule_violation"]].copy()
-    main_train_df_2["positive_example"] = train_dataset["positive_example_2"]
-    main_train_df_2["negative_example"] = train_dataset["negative_example_2"]
-    flatten.append(main_train_df_2)
+    # 随机选 positive_example 和 negative_example
+    train_df["positive_example"] = np.where(
+        np.random.rand(len(train_df)) < 0.5,
+        train_df["positive_example_1"],
+        train_df["positive_example_2"]
+    )
+    train_df["negative_example"] = np.where(
+        np.random.rand(len(train_df)) < 0.5,
+        train_df["negative_example_1"],
+        train_df["negative_example_2"]
+    )
 
-    # Use the examples as training data as well
-    # Positive examples
-    pos_df_1 = train_dataset[["rule", "subreddit"]].copy()
-    pos_df_1["body"] = train_dataset["positive_example_1"]
-    pos_df_1["rule_violation"] = 1
-    pos_df_1["positive_example"] = train_dataset["positive_example_2"]
-    pos_df_1["negative_example"] = train_dataset["negative_example_1"]
-    flatten.append(pos_df_1)
+    # 删除原来的候选列
+    train_df.drop(columns=["positive_example_1","positive_example_2",
+                           "negative_example_1","negative_example_2"], inplace=True)
 
-    pos_df_2 = train_dataset[["rule", "subreddit"]].copy()
-    pos_df_2["body"] = train_dataset["positive_example_2"]
-    pos_df_2["rule_violation"] = 1
-    pos_df_2["positive_example"] = train_dataset["positive_example_1"]
-    pos_df_2["negative_example"] = train_dataset["negative_example_2"]
-    flatten.append(pos_df_2)
+    flatten.append(train_df)
 
-    # Negative examples
-    neg_df_1 = train_dataset[["rule", "subreddit"]].copy()
-    neg_df_1["body"] = train_dataset["negative_example_1"]
-    neg_df_1["rule_violation"] = 0
-    neg_df_1["positive_example"] = train_dataset["positive_example_1"]
-    neg_df_1["negative_example"] = train_dataset["negative_example_2"]
-    flatten.append(neg_df_1)
+    # ---------- 处理测试集 ----------
+    for violation_type in ["positive", "negative"]:
+        for i in range(1, 3):
+            sub_dataset = test_dataset[["rule","subreddit",
+                                        "positive_example_1","positive_example_2",
+                                        "negative_example_1","negative_example_2"]].copy()
 
-    neg_df_2 = train_dataset[["rule", "subreddit"]].copy()
-    neg_df_2["body"] = train_dataset["negative_example_2"]
-    neg_df_2["rule_violation"] = 0
-    neg_df_2["positive_example"] = train_dataset["positive_example_2"]
-    neg_df_2["negative_example"] = train_dataset["negative_example_1"]
-    flatten.append(neg_df_2)
+            if violation_type == "positive":
+                # body 用当前 positive_example
+                body_col = f"positive_example_{i}"
+                other_positive_col = f"positive_example_{3-i}"  # 另一个 positive
+                sub_dataset["body"] = sub_dataset[body_col]
+                sub_dataset["positive_example"] = sub_dataset[other_positive_col]
+                # negative_example 随机选
+                sub_dataset["negative_example"] = np.where(
+                    np.random.rand(len(sub_dataset)) < 0.5,
+                    sub_dataset["negative_example_1"],
+                    sub_dataset["negative_example_2"]
+                )
+                sub_dataset["rule_violation"] = 1
 
-    dataframe = pd.concat(flatten, axis=0, ignore_index=True)
+            else:  # violation_type == "negative"
+                body_col = f"negative_example_{i}"
+                other_negative_col = f"negative_example_{3-i}"
+                sub_dataset["body"] = sub_dataset[body_col]
+                sub_dataset["negative_example"] = sub_dataset[other_negative_col]
+                sub_dataset["positive_example"] = np.where(
+                    np.random.rand(len(sub_dataset)) < 0.5,
+                    sub_dataset["positive_example_1"],
+                    sub_dataset["positive_example_2"]
+                )
+                sub_dataset["rule_violation"] = 0
+
+            # 删除原来的候选列
+            sub_dataset.drop(columns=["positive_example_1","positive_example_2",
+                                      "negative_example_1","negative_example_2"], inplace=True)
+
+            flatten.append(sub_dataset)
+
+    # 合并所有 DataFrame
+    dataframe = pd.concat(flatten, axis=0)
     dataframe = dataframe.drop_duplicates(ignore_index=True)
-    
+
     return dataframe
 
 
@@ -103,7 +127,9 @@ def build_dataset(dataframe):
     dataframe = dataframe[columns]
     dataset = Dataset.from_pandas(dataframe)
     dataset.to_pandas().to_csv("/kaggle/working/dataset.csv", index=False)
-    return dataset\n# --- new cell ---\n%%writefile train.py
+    return dataset
+# --- new cell ---
+%%writefile train.py
 import pandas as pd
 
 from trl import SFTTrainer, SFTConfig
@@ -168,7 +194,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()\n# --- new cell ---\n%%writefile inference.py
+    main()
+# --- new cell ---
+%%writefile inference.py
 import os
 os.environ["VLLM_USE_V1"] = "0"
 
@@ -284,7 +312,9 @@ def main():
 if __name__ == "__main__":
     main()
 
-\n# --- new cell ---\n%%writefile accelerate_config.yaml
+
+# --- new cell ---
+%%writefile accelerate_config.yaml
 compute_environment: LOCAL_MACHINE
 debug: false
 deepspeed_config:
@@ -332,7 +362,17 @@ same_network: true
 tpu_env: []
 tpu_use_cluster: false
 tpu_use_sudo: false
-use_cpu: false\n# --- new cell ---\n!accelerate launch --config_file accelerate_config.yaml train.py\n# --- new cell ---\n!python inference.py\n# --- new cell ---\n!head submission_qwen.csv\n# --- new cell ---\n# ! mkdir -p /tmp/src\n# --- new cell ---\n%%writefile infer_qwen.py
+use_cpu: false
+# --- new cell ---
+!accelerate launch --config_file accelerate_config.yaml train.py
+# --- new cell ---
+!python inference.py
+# --- new cell ---
+!head submission_qwen.csv
+# --- new cell ---
+# ! mkdir -p /tmp/src
+# --- new cell ---
+%%writefile infer_qwen.py
 
 import os
 import pandas as pd
@@ -428,9 +468,15 @@ You are given a comment on reddit. Your task is to classify if it violates the g
     df["pred"] = df["Yes"]
     df['rule_violation'] = df["pred"]
     df[['row_id', 'rule_violation']].to_csv("submission_qwen14b.csv",index=False)
-    pd.read_csv('submission_qwen14b.csv')\n# --- new cell ---\n# %cd /tmp
-!python infer_qwen.py\n# --- new cell ---\nimport os
-import pandas as pd\n# --- new cell ---\n%%writefile constants.py
+    pd.read_csv('submission_qwen14b.csv')
+# --- new cell ---
+# %cd /tmp
+!python infer_qwen.py
+# --- new cell ---
+import os
+import pandas as pd
+# --- new cell ---
+%%writefile constants.py
 EMBDEDDING_MODEL_PATH = "/kaggle/input/qwen-3-embedding/transformers/0.6b/1"
 MODEL_OUTPUT_PATH = '/kaggle/input/qwen3-8b-embedding'
 DATA_PATH = "/kaggle/input/jigsaw-agile-community-rules"
@@ -440,7 +486,9 @@ EMBEDDING_MODEL_QUERY = "Instruct: Given a web search query, retrieve relevant p
 
 CLEAN_TEXT = True
 TOP_K = 2000
-BATCH_SIZE = 128\n# --- new cell ---\n%%writefile utils.py
+BATCH_SIZE = 128
+# --- new cell ---
+%%writefile utils.py
 import pandas as pd
 import torch.distributed as dist
 
@@ -479,14 +527,14 @@ def cleaner(text):
 
 def get_dataframe_to_train(data_path):
     train_dataset = pd.read_csv(f"{data_path}/train.csv")
+    test_dataset = pd.read_csv(f"{data_path}/test.csv").sample(frac=0.6, random_state=42).reset_index(drop=True)
 
     flatten = []
     flatten.append(train_dataset[["body", "rule", "subreddit", "rule_violation"]])
     
-    # Use the examples from the train set as part of the corpus
     for violation_type in ["positive", "negative"]:
         for i in range(1, 3):
-            sub_dataset = train_dataset[[f"{violation_type}_example_{i}", "rule", "subreddit"]].copy()
+            sub_dataset = test_dataset[[f"{violation_type}_example_{i}", "rule", "subreddit"]].copy()
             sub_dataset = sub_dataset.rename(columns={f"{violation_type}_example_{i}": "body"})
             sub_dataset["rule_violation"] = 1 if violation_type == "positive" else 0
             flatten.append(sub_dataset)
@@ -512,7 +560,9 @@ def prepare_dataframe(dataframe):
             }
         )
 
-    return dataframe\n# --- new cell ---\n%%writefile semantic.py
+    return dataframe
+# --- new cell ---
+%%writefile semantic.py
 import pandas as pd
 from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer
 from sentence_transformers import SentenceTransformer
@@ -606,7 +656,11 @@ def generate_submission():
 if __name__ == "__main__":
     generate_submission()
 
-\n# --- new cell ---\n!python semantic.py\n# --- new cell ---\nimport pandas as pd
+
+# --- new cell ---
+!python semantic.py
+# --- new cell ---
+import pandas as pd
 import numpy as np
 
 q = pd.read_csv('submission_qwen.csv')
@@ -622,5 +676,7 @@ rm = m['rule_violation'].rank(method='average') / (len(m)+1)
 blend = 0.5*rq + 0.3*rl + 0.2*rm   # or tune the rank-weights with a tiny grid using OOF
 q['rule_violation'] = blend
 q.to_csv('/kaggle/working/submission.csv', index=False)
-\n# --- new cell ---\nimport pandas as pd
-pd.read_csv('/kaggle/working/submission.csv')\n# --- new cell ---\n
+
+# --- new cell ---
+import pandas as pd
+pd.read_csv('/kaggle/working/submission.csv')
