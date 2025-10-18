@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-18 01:00:00 JST] - Critical Fix: Double-Ranking Bug in FIXED-COMPLETE
+
+### Fixed
+- **Critical double-ranking bug** in `test-on testdataset+qwenemdding+llama lr-v2-FIXED-COMPLETE.ipynb`
+- Removed rank normalization from `inference.py` that was causing submission format errors
+- This bug was causing "Submission Scoring Error" on Kaggle even though notebook executed successfully
+
+### Root Cause
+- `inference.py` was applying rank normalization to predictions before saving `submission_qwen.csv`
+- Ensemble code was then applying rank normalization AGAIN to already-ranked data
+- This double-ranking destroyed the row_id alignment, causing mismatched predictions
+
+### Technical Details
+**Before (Buggy)**:
+```python
+# In inference.py (line 540)
+rq = submission['rule_violation'].rank(method='average') / denominator
+submission['rule_violation'] = rq  # Pre-ranked data saved
+
+# In ensemble code (line 860)
+rq = safe_rank(q['rule_violation'])  # Ranking already-ranked data!
+```
+
+**After (Fixed)**:
+```python
+# In inference.py (removed lines 535-541)
+# Save raw logprobs directly, no pre-ranking
+
+# In ensemble code (unchanged)
+rq = safe_rank(q['rule_violation'])  # Now ranks raw logprobs only once
+```
+
+### Impact
+- Notebook will now generate correct submission format
+- Row_id values properly aligned with predictions
+- Prevents "Submission Scoring Error" on Kaggle platform
+
+### Comparison with Working Version
+- The original `[LB 0.916] Preprocessing + Qwen Hybrid Ensemble.ipynb` does NOT pre-rank in individual inference scripts
+- It only applies ranking once in the final ensemble step
+- FIXED-COMPLETE now follows the same pattern
+
 ## [2025-10-18 00:00:00 JST] - Experiment 4 Score Recorded
 
 ### Recorded
