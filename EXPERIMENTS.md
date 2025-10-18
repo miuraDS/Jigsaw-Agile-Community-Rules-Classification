@@ -88,6 +88,46 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 
 ---
 
+### Experiment 4: Preprocessing + Qwen Hybrid Ensemble (New Run)
+**Date**: 2025-10-18
+**Version**: Hybrid Ensemble v2
+**Notebook**: `notebooks/[LB 0.916] Preprocessing + Qwen Hybrid Ensemble.ipynb`
+**Score (Column-averaged AUC)**: **0.914**
+
+#### Model Configuration:
+- **Base Model**: Qwen 2.5 (0.5b-instruct-gptq-int4)
+- **Fine-tuning**: LoRA (rank=16, alpha=32, dropout=0.1)
+- **Training**: 1 epoch, learning rate=1e-4, warmup=0.03
+- **Additional Models**:
+  - Qwen 2.5 14B (with LoRA rank=32, 1 epoch)
+  - Qwen3 Embeddings (0.6B) with fine-tuned semantic search
+
+#### Key Features:
+- **TTA with 4 example variants** (all pos/neg combinations)
+- **Enhanced text cleaning** with emoji/markdown stripping
+- **Rule canonicalization** with keyword fallback
+- **Chunked inference** for 14B model (chunk_size=64)
+- **Token truncation** (body=128, examples=64, rule=64)
+- **Semantic search with temperature scaling** (temp=0.2, TOP_K=2000)
+- **LoRA fine-tuning for embedding model**
+- **Ensemble weights**: 50% (0.5B) / 30% (Embeddings) / 20% (14B)
+
+#### Implementation Details:
+- Preprocessing with `clean-text` library for URL/EMAIL/PHONE masking
+- Custom `strip_emojis_kaomoji()` with Unicode emoji removal
+- Rule knowledge base with canonical definitions
+- Test-time augmentation using all 4 positive/negative example combinations
+- Deepspeed ZeRO Stage 2 training with 2 GPUs
+- Rank-based normalization for final ensemble
+
+#### Notes:
+- Slight score decrease from previous run (0.915 → 0.914)
+- Different version with enhanced preprocessing and cleaning
+- Added LoRA fine-tuning for Qwen3 embeddings
+- More aggressive text cleaning may have impacted score
+
+---
+
 ## Performance History
 
 | Date | Notebook/Script | Version | Score (AUC) | Notes |
@@ -95,6 +135,7 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 | 2025-10-15 | test-on testdataset+qwenemdding+llama lr | Original | 0.916 | Baseline with ensemble |
 | 2025-10-15 | test-on testdataset+qwenemdding+llama lr-v2 | V2 | TBD (0.98+) | Enhanced with TTA + improvements |
 | N/A | [LB 0.916] Preprocessing + Qwen Hybrid Ensemble | Hybrid Ensemble | 0.915 | Kaggle-style preprocessing + Qwen hybrid ensemble |
+| 2025-10-18 | [LB 0.916] Preprocessing + Qwen Hybrid Ensemble | Hybrid Ensemble v2 | 0.914 | Enhanced cleaning + embedding fine-tuning |
 
 ---
 

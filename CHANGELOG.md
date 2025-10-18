@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-18 00:00:00 JST] - Experiment 4 Score Recorded
+
+### Recorded
+- Added Experiment 4 to EXPERIMENTS.md: "[LB 0.916] Preprocessing + Qwen Hybrid Ensemble" scored 0.914 AUC
+- This is a different run from Experiment 3 (0.915) with enhanced preprocessing features
+- Key features: TTA with 4 variants, enhanced text cleaning, LoRA fine-tuned embeddings, rule canonicalization
+
+### Notes
+- Slight performance decrease (0.915 → 0.914) possibly due to more aggressive text cleaning
+- Version includes `clean-text` library preprocessing and custom emoji/markdown stripping
+- Added LoRA fine-tuning for Qwen3 Embeddings model
+
 ## [2025-10-17 23:35:52 JST] - Complete Fixed Notebook with Ensemble
 
 ### Fixed
