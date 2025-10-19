@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-19 14:00:00 JST] - Critical Fix: Submission Path in FIXED-COMPLETE
+
+### Fixed
+- **Submission Scoring Error root cause identified and fixed** in FIXED-COMPLETE notebook
+- Changed output path from relative `'submission.csv'` to absolute `/kaggle/working/submission.csv`
+- This ensures Kaggle's submission system can find and validate the output file
+
+### Root Cause
+- Working notebooks use `/kaggle/working/submission.csv` (absolute path to Kaggle's submission directory)
+- FIXED-COMPLETE was using `'submission.csv'` (relative path)
+- Kaggle's submission validator looks for files in `/kaggle/working/` specifically
+- Relative paths may point to different locations depending on execution context
+
+### Technical Details
+**Before (Cell 16)**:
+```python
+output_path = 'submission.csv'
+q.to_csv(output_path, index=False)
+```
+
+**After (Fixed)**:
+```python
+output_path = '/kaggle/working/submission.csv'
+q.to_csv(output_path, index=False)
+```
+
+### Impact
+- Notebook will now save submission to correct Kaggle directory
+- Eliminates "Submission Scoring Error" even when file is generated
+- Matches working [LB 0.916] notebook pattern
+
+### Related Issues
+- User confirmed file was generated but Kaggle showed "Submission Scoring Error"
+- This was due to file being in wrong directory, not format issues
+- Previous double-ranking bug fix (commit 0d95c3f) was correct but incomplete
+
 ## [2025-10-19 00:00:00 JST] - Experiment 5: Pseudo-Training with Llama 3.2
 
 ### Recorded
