@@ -160,9 +160,13 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 
 ## Future Experiments
 
-### Planned: LB 0.916 + 5 Enhancements (Expected: 0.94-0.96 AUC)
-**Status**: Implementation plan created
-**File**: `IMPROVEMENTS_PLAN.md`
+### Experiment 6: LB 0.916 + 5 Enhancements (IMPROVED Version)
+**Date**: 2025-10-19
+**Version**: IMPROVED - 5 Enhancements
+**Notebook**: `notebooks/[LB 0.916] IMPROVED - 5 Enhancements.ipynb`
+**Score (Column-averaged AUC)**: **TBD** (Expected: 0.94-0.96)
+**Status**: ✅ **READY TO RUN**
+**Implementation Plan**: `IMPROVEMENTS_PLAN.md`
 
 **5 Major Enhancements**:
 1. ✅ **Increased LoRA Capacity & Training** (+1-2% expected)
