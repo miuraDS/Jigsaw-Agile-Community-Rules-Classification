@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-19 00:00:00 JST] - Experiment 5: Pseudo-Training with Llama 3.2
+
+### Recorded
+- Added Experiment 5 to EXPERIMENTS.md: "jigsaw-pseudo-training-llama-3-2-3b-instruct-read.ipynb" scored 0.916 AUC
+- Pseudo-training approach using Llama 3.2 3B Instruct model
+- Matches baseline performance of other 0.916 AUC experiments
+
+### Notes
+- Read-only evaluation version of pseudo-training approach
+- Same performance as original Qwen ensemble (Experiment 1)
+
 ## [2025-10-18 01:00:00 JST] - Critical Fix: Double-Ranking Bug in FIXED-COMPLETE
 
 ### Fixed

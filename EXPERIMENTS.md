@@ -128,6 +128,24 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 
 ---
 
+### Experiment 5: Pseudo-Training with Llama 3.2 3B Instruct
+**Date**: 2025-10-19
+**Version**: Pseudo-Training
+**Notebook**: `notebooks/jigsaw-pseudo-training-llama-3-2-3b-instruct-read.ipynb`
+**Score (Column-averaged AUC)**: **0.916**
+
+#### Model Configuration:
+- **Base Model**: Llama 3.2 3B Instruct
+- **Approach**: Pseudo-labeling with read-only evaluation
+- Details TBD based on notebook analysis
+
+#### Notes:
+- Matches baseline performance (0.916 AUC)
+- Pseudo-training approach with Llama 3.2 model
+- Read-only evaluation version
+
+---
+
 ## Performance History
 
 | Date | Notebook/Script | Version | Score (AUC) | Notes |
@@ -136,6 +154,7 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 | 2025-10-15 | test-on testdataset+qwenemdding+llama lr-v2 | V2 | TBD (0.98+) | Enhanced with TTA + improvements |
 | N/A | [LB 0.916] Preprocessing + Qwen Hybrid Ensemble | Hybrid Ensemble | 0.915 | Kaggle-style preprocessing + Qwen hybrid ensemble |
 | 2025-10-18 | [LB 0.916] Preprocessing + Qwen Hybrid Ensemble | Hybrid Ensemble v2 | 0.914 | Enhanced cleaning + embedding fine-tuning |
+| 2025-10-19 | jigsaw-pseudo-training-llama-3-2-3b-instruct-read | Pseudo-Training | 0.916 | Pseudo-labeling with Llama 3.2 3B |
 
 ---
 
