@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-19 19:00:00 JST] - Improve: Better User Experience Messages
+
+### Improved
+- **Enhanced error messages** in ensemble cell for better UX
+- Clear step-by-step instructions when prerequisite cells haven't run
+- Friendly formatting with visual separators and checkmarks
+
+### Changes
+**Before**:
+```
+ERROR: Missing required submission files: ['submission_qwen.csv', 'submission_qwen3.csv']
+Please ensure you have run all previous cells...
+```
+
+**After**:
+```
+======================================================================
+⚠️  PREREQUISITE CELLS NOT RUN YET
+======================================================================
+Missing files: ['submission_qwen.csv', 'submission_qwen3.csv']
+
+This is normal! Please run the previous cells in order:
+
+Step 1: Run cells 1-13 (Train & Inference)
+  → Generates submission_qwen.csv
+...
+
+TIP: You can also use 'Run All' to execute all cells in order!
+======================================================================
+```
+
+### Impact
+- Less confusing for users
+- Clear workflow guidance
+- Better visual formatting
+- Explains that error is expected behavior
+
 ## [2025-10-19 18:30:00 JST] - Fix: Syntax Error in Ensemble Cell
 
 ### Fixed
