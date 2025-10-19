@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-19 16:00:00 JST] - Improvement Plan: LB 0.916 + 5 Enhancements
+
+### Added
+- **IMPROVEMENTS_PLAN.md**: Comprehensive plan for improving LB 0.916 notebook
+- Documented 5 major enhancements targeting 0.94-0.96 AUC (Option B - Aggressive)
+
+### Planned Enhancements
+
+#### 1. Increased LoRA Capacity & Training (+1-2% expected)
+- LoRA rank: 16 → 32 (2x model capacity)
+- Epochs: 1 → 3 (3x training iterations)
+- Learning rate: 1e-4 → 5e-5 (better convergence)
+- Warmup ratio: 0.03 → 0.1 (more gradual warmup)
+
+#### 2. Enhanced TTA (+0.5-1% expected)
+- TTA rounds: 4 → 8 (double augmentation variants)
+- Multiple random seeds for diversity
+- Confidence-weighted averaging
+
+#### 3. Optimized Ensemble Weights (+0.3-0.7% expected)
+- Current weights: 50/30/20
+- New weights: 45/25/30 (more weight to 14B model)
+- Grid search for optimal ratios
+
+#### 4. Advanced Prompt Engineering (+0.5-1% expected)
+- Structured reasoning format
+- Chain-of-thought prompts
+- Rule-specific templates
+- Clear violation/non-violation examples
+
+#### 5. Temperature Scaling & Calibration (+0.2-0.5% expected)
+- Calibrate predictions before ranking
+- Per-model temperature optimization
+- Better probability estimates
+
+### Expected Impact
+- **Total Expected Improvement**: +2.5-5% AUC
+- **Target Score**: 0.94-0.96 AUC
+- **Current Best**: 0.916 AUC (Experiment 5)
+- **Risk Level**: Medium-High (aggressive improvements)
+
+### Updated
+- EXPERIMENTS.md: Added "Future Experiments" section with detailed improvement plan
+- Documented implementation strategy for each enhancement
+
+### Notes
+- Implementation ready to begin
+- Based on successful techniques from V2 notebook and proven ML practices
+- All enhancements designed to work synergistically
+
 ## [2025-10-19 15:00:00 JST] - Fix: Cell 16 Syntax Error in FIXED-COMPLETE
 
 ### Fixed

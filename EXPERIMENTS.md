@@ -14,7 +14,7 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 **Version**: Original (Baseline)
 **Notebook**: `notebooks/test-on testdataset+qwenemdding+llama lr.ipynb`
 **Source Code**: `src/test-on testdataset+qwenemdding+llama lr.py`
-**Score (Column-averaged AUC)**: **0.916**
+**Score (Column-averaged AUC)**: **TBD** (Submission Scoring Error)
 
 #### Model Configuration:
 - **Base Model**: Qwen 2.5 (0.5b-instruct-gptq-int4)
@@ -42,7 +42,7 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 **Version**: V2 (Improved)
 **Notebook**: `notebooks/test-on testdataset+qwenemdding+llama lr-v2.ipynb`
 **Source Code**: `src/test-on testdataset+qwenemdding+llama lr-v2.py`
-**Score (Column-averaged AUC)**: **TBD** (Expected: 0.98+)
+**Score (Column-averaged AUC)**: **TBD** (Submission Scoring Error)
 
 #### Model Configuration:
 - **Base Model**: Qwen 2.5 (0.5b-instruct-gptq-int4)
@@ -160,15 +160,50 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 
 ## Future Experiments
 
-### Ideas to Try:
-- [ ] Increase TTA rounds (5 → 10)
-- [ ] Experiment with different ensemble weights
+### Planned: LB 0.916 + 5 Enhancements (Expected: 0.94-0.96 AUC)
+**Status**: Implementation plan created
+**File**: `IMPROVEMENTS_PLAN.md`
+
+**5 Major Enhancements**:
+1. ✅ **Increased LoRA Capacity & Training** (+1-2% expected)
+   - LoRA rank: 16 → 32
+   - Epochs: 1 → 3
+   - Learning rate: 1e-4 → 5e-5
+   - Better warmup: 0.03 → 0.1
+
+2. ✅ **Enhanced TTA** (+0.5-1% expected)
+   - TTA rounds: 4 → 8
+   - Multiple random seeds for diversity
+   - Confidence-weighted averaging
+
+3. ✅ **Optimized Ensemble Weights** (+0.3-0.7% expected)
+   - Current: 50/30/20 → New: 45/25/30
+   - Give more weight to 14B model
+   - Grid search for optimal ratios
+
+4. ✅ **Advanced Prompt Engineering** (+0.5-1% expected)
+   - Structured reasoning format
+   - Chain-of-thought prompts
+   - Rule-specific templates
+
+5. ✅ **Temperature Scaling & Calibration** (+0.2-0.5% expected)
+   - Calibrate predictions before ranking
+   - Per-model temperature optimization
+   - Better probability estimates
+
+**Total Expected Improvement**: +2.5-5% AUC
+**Target Score**: 0.94-0.96 AUC
+
+See `IMPROVEMENTS_PLAN.md` for detailed implementation guide.
+
+### Other Ideas to Try:
+- [ ] Increase TTA rounds further (8 → 12)
 - [ ] Try larger LoRA rank (32 → 64)
 - [ ] Add more training epochs (3 → 5)
 - [ ] Implement stratified k-fold cross-validation
-- [ ] Test different temperature values
-- [ ] Experiment with different base prompts
 - [ ] Try focal loss for imbalanced classes
+- [ ] Add meta-learning across rules
+- [ ] Implement pseudo-labeling from Llama 3.2
 
 ---
 
