@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-19 20:00:00 JST] - Critical: Add Error Handling to Execution Cells
+
+### Fixed
+- **Silent failures** in cells 14, 19, and 25 that caused ensemble to fail
+- Added comprehensive error handling and validation to all critical execution cells
+- Notebook now stops immediately if any step fails with clear error messages
+
+### Problem
+- User reported error during Kaggle submission: missing CSV files
+- Cells running `!python script.py` would fail silently
+- Notebook continued to ensemble cell even when intermediate files weren't created
+- No visibility into which step failed
+
+### Solution
+Added robust error handling to all critical cells:
+
+**Cell 14** (inference.py):
+- Captures stdout/stderr from subprocess
+- Validates return code (exits if non-zero)
+- Checks if submission_qwen.csv was created
+- Clear success/failure messages
+
+**Cell 19** (infer_qwen.py):
+- Same comprehensive error handling
+- Validates submission_qwen14b.csv creation
+
+**Cell 25** (semantic.py):
+- Same comprehensive error handling
+- Validates submission_qwen3.csv creation
+
+### Impact
+- Notebook will stop immediately at the failing step
+- Clear error messages show exactly what failed
+- Prevents misleading "missing files" error at ensemble
+- Better debugging for Kaggle submissions
+
+### Next Run
+When you submit the notebook again, you'll see exactly which step fails:
+- ✅ SUCCESS messages when steps complete
+- ❌ ERROR messages with details when steps fail
+- No more silent failures
+
 ## [2025-10-19 19:00:00 JST] - Improve: Better User Experience Messages
 
 ### Improved
