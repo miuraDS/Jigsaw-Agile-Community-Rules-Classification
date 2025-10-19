@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-19 18:00:00 JST] - Fix: File Validation in IMPROVED Notebook
+
+### Fixed
+- **FileNotFoundError** in ensemble cell when CSV files don't exist
+- Added validation to check for required submission files before processing
+- Provides clear error messages guiding users to run prerequisite cells
+
+### Technical Details
+**Before**:
+```python
+q = pd.read_csv('submission_qwen.csv')  # Failed if file missing
+```
+
+**After**:
+```python
+required_files = ['submission_qwen.csv', 'submission_qwen3.csv', 'submission_qwen14b.csv']
+missing_files = [f for f in required_files if not os.path.exists(f)]
+if missing_files:
+    print(f"ERROR: Missing required submission files: {missing_files}")
+    # ... helpful guidance ...
+    sys.exit(1)
+```
+
+### Impact
+- Prevents confusing FileNotFoundError
+- Shows which cells need to be run first
+- Better user experience when running notebook
+
 ## [2025-10-19 17:00:00 JST] - Created: IMPROVED Notebook with 5 Enhancements
 
 ### Added
