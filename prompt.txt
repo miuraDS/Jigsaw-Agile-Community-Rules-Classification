@@ -1,16 +1,16 @@
 # Target file
-- test-on testdataset+qwenemdding+llama lr-v2-FIXED.ipynb
+- notebooks\[LB 0.916] IMPROVED - 5 Enhancements.ipynb
 
 # Target function/class
 -
 # Question
--　After submitting test-on testdataset+qwenemdding+llama lr-v2-FIXED.ipynb, the following error occurred — do you know the cause?
+-　
 
 
 
 
 # Instructions
--
+- The following error occurred.
 
 
 
@@ -22,7 +22,24 @@
 
 
 # Errors
-- Submission CSV Not Found: Your notebook did not output the expected submission file (often submission.csv). The rerun of your notebook appears to have completed, but when we looked for your submission file, it wasn't there. This means it's possible to have bugs/errors upstream that halted execution and prevented the file from being written. Attempting to read a non-existent directory/file from a dataset is a common reason execution is halted (causing either Submission CSV Not Found or Notebook Threw Exception).
+- ======================================================================
+STEP 1: Running Qwen 0.5B Inference with TTA
+======================================================================
+
+❌ ERROR: inference.py failed with return code 1
+STDERR: Traceback (most recent call last):
+  File "/kaggle/working/inference.py", line 15, in <module>
+    from utils import build_dataset
+  File "/kaggle/working/utils.py", line 51
+    1) {pos_ex}
+     ^
+SyntaxError: unmatched ')'
+
+An exception has occurred, use %tb to see the full traceback.
+
+SystemExit: 1
+/usr/local/lib/python3.11/dist-packages/IPython/core/interactiveshell.py:3561: UserWarning: To exit: use 'exit', 'quit', or Ctrl-D.
+  warn("To exit: use 'exit', 'quit', or Ctrl-D.", stacklevel=1)
 
 
 # Goal
