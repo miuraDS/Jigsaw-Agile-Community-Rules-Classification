@@ -507,3 +507,68 @@ rq = safe_rank(q['rule_violation'])  # Now ranks raw logprobs only once
 ### Added
 - New `SEMANTIC_TEMPERATURE` constant to tune embedding-based probability sharpening
 
+## [2025-10-21 00:00:00 JST] - Created V2 Notebook with Multiple Enhancements
+
+### Added
+- **New Notebook**: `notebooks/deberta-large-2epochs-1hr_v2.ipynb`
+- Enhanced version targeting higher AUC scores with 7 major improvements
+
+### Key Improvements
+
+#### 1. Enhanced Data Processing
+- **Oversampling**: Added class balancing to handle imbalanced positive/negative examples
+- **Better sampling strategy**: Balances classes to improve model training
+- **Impact**: Reduces bias toward majority class
+
+#### 2. Improved Prompt Engineering
+- **Richer context**: Added subreddit name to prompts for better context
+- **Format**: "Subreddit: r/{subreddit} | Rule: {rule} [SEP] {comment}"
+- **Impact**: Models can better understand community-specific rules
+
+#### 3. Advanced Training Configuration
+- **Longer sequences**: MAX_LENGTH increased from 512 to 640 tokens
+- **Gradient accumulation**: Effective batch size optimization (4x4=16)
+- **Mixed precision**: FP16 training for faster computation
+- **More epochs**: Increased from 3 to 4-5 epochs with early stopping
+- **Better regularization**: Increased weight decay (0.01 → 0.02)
+- **Warmup**: Increased warmup ratio (0.1 → 0.15)
+
+#### 4. Validation Monitoring
+- **Validation split**: 10% stratified split for monitoring
+- **AUC tracking**: Custom metric computation during training
+- **Early stopping**: Prevents overfitting with patience=2
+- **Best model loading**: Automatically loads best checkpoint
+
+#### 5. Optimized Hyperparameters
+- **DeBERTa v2**: 4 epochs, LR=2e-5, BS=4, GA=4
+- **DistilRoBERTa v2**: 4 epochs, LR=3e-5, BS=8, GA=2
+- **DeBERTa AUC v2**: 5 epochs, LR=3e-5, BS=6, GA=3
+
+#### 6. Enhanced Ensemble Strategy
+- **Optimized weights**: Rebalanced from [0.5, 0.1, 0.1, 0.1, 0.2] to [0.45, 0.15, 0.12, 0.08, 0.20]
+- **More weight to semantic**: Qwen3 embeddings increased (0.1 → 0.15)
+- **Statistics reporting**: Added prediction distribution stats
+
+#### 7. Better Code Quality
+- **Error handling**: Proper validation and error messages
+- **Documentation**: Comprehensive markdown explaining improvements
+- **Reproducibility**: Consistent seeding and deterministic operations
+
+### Expected Performance
+- **Target**: 0.94-0.96 AUC
+- **Baseline**: Current notebook scores ~0.916 AUC
+- **Expected Gain**: +2.4-4.4 percentage points
+- **Key factors**: Better training, richer context, optimized ensemble
+
+### Files Modified
+- Created: `notebooks/deberta-large-2epochs-1hr_v2.ipynb`
+- Created: Embedded `utils_v2.py` with enhanced functions
+- Created: Embedded training scripts with improved configurations
+
+### Technical Notes
+- All models trained with validation monitoring
+- Subreddit context helps with community-specific rules
+- Class balancing addresses data imbalance
+- Early stopping prevents overfitting
+- Ensemble weights tuned for better model diversity
+
