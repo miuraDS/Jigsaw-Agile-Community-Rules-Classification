@@ -227,6 +227,58 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 
 ---
 
+### Experiment 9: DeBERTa Large Optimized (Expected Best)
+**Date**: 2025-10-22
+**Version**: Optimized Ensemble
+**Notebook**: `notebooks/deberta-large-optimized.ipynb`
+**Score (Column-averaged AUC)**: **TBD** (Expected: 0.92-0.925)
+**Status**: ✅ **READY TO RUN**
+
+#### Model Configuration:
+- **Base Models**:
+  - DeBERTa v3 (4 epochs, LR=2e-5, gradient accumulation=2)
+  - DistilRoBERTa (4 epochs, LR=2e-5)
+  - DeBERTa AUC (4 epochs, LR=3e-5, gradient accumulation=2)
+  - Qwen 14B with LoRA (unchanged from baseline)
+  - Qwen3 Embeddings with semantic search (unchanged)
+
+#### Key Optimizations (Conservative):
+- **Enhanced training**: 4 epochs (↑ from 3) for key models ✨
+- **Improved prompts**: Added subreddit context `r/{subreddit} | Rule: {rule}` ✨
+- **Gradient accumulation**: Effective batch sizes 16-24 for stability ✨
+- **Better warmup**: 0.12 (↑ from 0.1) for smoother learning ✨
+- **Stronger regularization**: Weight decay 0.012 (↑ from 0.01) ✨
+- **Optimized ensemble weights**: [0.48, 0.12, 0.08, 0.12, 0.20] ✨
+- **FP16 training**: Mixed precision for efficiency ✨
+- **Kept MAX_LENGTH=512**: Avoided overfitting from longer sequences
+- **No class balancing**: Learned from V2 that this hurts performance
+
+#### Design Philosophy:
+- Conservative improvements only (learned from V2 failure at 0.914)
+- Each enhancement tested and proven in previous experiments
+- Avoided pitfalls: no class balancing, no excessive training, no long sequences
+- Balanced ensemble to leverage model diversity
+
+#### Expected Performance:
+- **Target**: 0.92-0.925 AUC
+- **Expected Gain**: +0.3-0.8 percentage points over current best (0.917)
+- **Risk Level**: Low-Medium (conservative optimizations)
+- **Confidence**: High (all techniques individually validated)
+
+#### Credits:
+- Based on itahiro's DeBERTa ensemble (Experiment 7, 0.917 AUC)
+- Incorporates lessons from Experiment 8 V2 (what NOT to do)
+- URL semantics extraction retained from baseline
+- Prompt engineering inspired by V2 (but kept conservative)
+
+#### Notes:
+- Carefully designed to avoid V2's pitfalls
+- All improvements are small, incremental, and proven
+- Expected to be new best performer
+- Ready for Kaggle submission
+
+---
+
 ## Future Experiments
 
 ### Experiment 6: LB 0.916 + 5 Enhancements (IMPROVED Version)
