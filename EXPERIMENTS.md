@@ -146,6 +146,73 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 
 ---
 
+### Experiment 7: DeBERTa Large 2 Epochs (Original)
+**Date**: 2025-10-22
+**Version**: Original DeBERTa
+**Notebook**: `notebooks/deberta-large-2epochs-1hr.ipynb`
+**Score (Column-averaged AUC)**: **0.917**
+
+#### Model Configuration:
+- **Base Models**:
+  - DeBERTa v2 Large (3 epochs, LR=2e-5)
+  - DistilRoBERTa (3 epochs, LR=3e-5)
+  - DeBERTa AUC (3 epochs, LR=3e-5)
+  - MPNet (3 epochs, LR=2e-5)
+  - Qwen3 Embeddings with semantic search
+
+#### Key Features:
+- Multi-model ensemble approach
+- Standard prompt format
+- MAX_LENGTH=512 tokens
+- Ensemble weights: [0.5, 0.1, 0.1, 0.1, 0.2]
+- No validation split during training
+
+#### Notes:
+- Best performing model so far (0.917 AUC)
+- DeBERTa-based ensemble approach
+- Slight improvement over previous best (0.916)
+
+---
+
+### Experiment 8: DeBERTa Large 2 Epochs V2 (Enhanced)
+**Date**: 2025-10-22
+**Version**: V2 - Enhanced DeBERTa
+**Notebook**: `notebooks/deberta-large-2epochs-1hr_v2.ipynb`
+**Score (Column-averaged AUC)**: **0.914**
+
+#### Model Configuration:
+- **Base Models**:
+  - DeBERTa v2 Large (4 epochs, LR=2e-5)
+  - DistilRoBERTa (4 epochs, LR=3e-5)
+  - DeBERTa AUC (5 epochs, LR=3e-5)
+  - MPNet (4 epochs, LR=2e-5)
+  - Qwen3 Embeddings with semantic search
+
+#### Key Features:
+- **Enhanced prompt engineering** with subreddit context ✨
+- **Class balancing** with oversampling ✨
+- **Longer sequences** (MAX_LENGTH=640) ✨
+- **Validation monitoring** with 10% stratified split ✨
+- **Early stopping** (patience=2) ✨
+- **Optimized ensemble weights**: [0.45, 0.15, 0.12, 0.08, 0.20] ✨
+- **Better regularization** (weight decay 0.01 → 0.02) ✨
+
+#### Improvements over V1:
+- Richer context with subreddit information
+- 25% longer sequences (512→640)
+- More training epochs (3-4 → 4-5)
+- Class balancing for imbalanced data
+- Validation-based early stopping
+- Rebalanced ensemble weights
+
+#### Notes:
+- Score decreased slightly (0.917 → 0.914) despite enhancements
+- Possible overfitting from longer training or oversampling
+- Validation monitoring may have helped prevent worse performance
+- Enhanced features may need further tuning
+
+---
+
 ## Performance History
 
 | Date | Notebook/Script | Version | Score (AUC) | Notes |
@@ -155,6 +222,8 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 | N/A | [LB 0.916] Preprocessing + Qwen Hybrid Ensemble | Hybrid Ensemble | 0.915 | Kaggle-style preprocessing + Qwen hybrid ensemble |
 | 2025-10-18 | [LB 0.916] Preprocessing + Qwen Hybrid Ensemble | Hybrid Ensemble v2 | 0.914 | Enhanced cleaning + embedding fine-tuning |
 | 2025-10-19 | jigsaw-pseudo-training-llama-3-2-3b-instruct-read | Pseudo-Training | 0.916 | Pseudo-labeling with Llama 3.2 3B |
+| 2025-10-22 | deberta-large-2epochs-1hr | Original DeBERTa | **0.917** | **New best score** - DeBERTa ensemble |
+| 2025-10-22 | deberta-large-2epochs-1hr_v2 | Enhanced DeBERTa | 0.914 | Enhanced features but lower score |
 
 ---
 
@@ -213,10 +282,11 @@ See `IMPROVEMENTS_PLAN.md` for detailed implementation guide.
 
 ## Best Performing Configuration
 
-**Current Best**: 0.916 (Experiment 1 - Original)
-- Multi-model ensemble approach
-- LoRA rank 16, 1 epoch training
-- Baseline implementation
+**Current Best**: 0.917 (Experiment 7 - DeBERTa Original)
+- DeBERTa-based multi-model ensemble
+- Standard prompt format (MAX_LENGTH=512)
+- Ensemble weights: [0.5, 0.1, 0.1, 0.1, 0.2]
+- 3 epochs training for most models
 
 **Expected Best**: 0.98+ (Experiment 2 - V2)
 - Enhanced multi-model ensemble

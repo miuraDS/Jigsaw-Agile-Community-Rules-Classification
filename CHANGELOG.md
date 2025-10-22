@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-22 00:00:00 JST] - Experiment Results: DeBERTa Notebooks
+
+### Recorded
+- **Experiment 7**: `notebooks/deberta-large-2epochs-1hr.ipynb` scored **0.917 AUC** (NEW BEST)
+- **Experiment 8**: `notebooks/deberta-large-2epochs-1hr_v2.ipynb` scored **0.914 AUC**
+
+### Performance Analysis
+**Original DeBERTa (0.917 AUC)**:
+- Multi-model ensemble with DeBERTa v2, DistilRoBERTa, DeBERTa AUC, MPNet, Qwen3
+- Standard configuration: MAX_LENGTH=512, 3 epochs
+- Ensemble weights: [0.5, 0.1, 0.1, 0.1, 0.2]
+- Achieved new best score, surpassing previous best of 0.916
+
+**Enhanced V2 (0.914 AUC)**:
+- Added 7 major enhancements: subreddit context, class balancing, longer sequences (640), validation monitoring, early stopping, optimized ensemble weights, better regularization
+- Despite improvements, score decreased slightly (0.917 → 0.914)
+- Possible causes: overfitting from longer training, oversampling effects, or features needing further tuning
+
+### Key Insights
+- Simpler approach outperformed enhanced version
+- Class balancing and longer sequences may have introduced overfitting
+- Validation monitoring (early stopping) may have prevented worse degradation
+- Future experiments should carefully validate each enhancement individually
+
+### Updated
+- EXPERIMENTS.md: Added detailed entries for Experiments 7 and 8
+- Updated "Best Performing Configuration" section with new best score
+- Added both notebooks to Performance History table
+
 ## [2025-10-19 20:00:00 JST] - Critical: Add Error Handling to Execution Cells
 
 ### Fixed
