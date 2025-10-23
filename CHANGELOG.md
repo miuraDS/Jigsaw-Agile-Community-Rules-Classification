@@ -2,6 +2,57 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-23 12:00:00 JST] - Experiment Results: Seed TTA Failed
+
+### Recorded
+- **Experiment 11**: `notebooks/deberta-single-tta.ipynb` scored **0.906 AUC**
+
+### Performance Analysis
+**Result**: Significant failure - worst score of all experiments
+- **Expected**: 0.918-0.919 AUC
+- **Actual**: 0.906 AUC
+- **Comparison**: -0.011 vs. Experiment 7 (0.917), -0.010 vs. baseline (0.916)
+- **Status**: **Worst performing experiment** in the entire series
+
+### What Went Wrong
+**Hypothesis was**: Training same model 3x with different seeds → better ensemble
+**Reality**: Single model repeated << Multi-model ensemble
+
+**Possible Reasons:**
+1. **Missing model diversity**: Exp 7 uses 5 different models (DeBERTa, DistilRoBERTa, DeBERTa AUC, Qwen3, Qwen14B)
+2. **Equal weighting suboptimal**: Some seeds may produce weak models
+3. **Seed diversity ≠ Architecture diversity**: Different initializations of same model don't capture different patterns
+4. **Only trained DeBERTa**: Missing the crucial ensemble members that contributed to 0.917
+5. **Rank normalization issues**: Normalizing 3 times may have distorted predictions
+
+### Critical Lesson
+**Model diversity > Seed diversity**
+
+For this competition:
+- ✅ **Works**: Ensemble of different model architectures (DeBERTa + DistilRoBERTa + Qwen)
+- ❌ **Doesn't work**: Ensemble of same model with different seeds
+
+### Key Insight
+Experiment 7's success comes from **architectural diversity**, not just DeBERTa:
+- DeBERTa v3 (50%)
+- Qwen3 embeddings (10%)
+- DistilRoBERTa (10%)
+- Qwen 14B (10%)
+- DeBERTa AUC (20%)
+
+Removing 4 out of 5 models and replacing with same model trained 3x was a failed strategy.
+
+### Updated
+- EXPERIMENTS.md: Added actual score and detailed failure analysis
+- Performance History: Added Experiment 11 (worst performer)
+- Deleted: `notebooks/deberta-single-tta-incomplete.ipynb` (no longer needed)
+
+### Implications for Future Work
+- **Stick with Experiment 7 unchanged**: It remains the best (0.917)
+- **Don't simplify what works**: Removing model diversity hurts performance
+- **Seed TTA doesn't help**: At least not as a replacement for model diversity
+- **Consider**: Adding MORE different models to Exp 7, not fewer
+
 ## [2025-10-23 01:00:00 JST] - Completed: Made deberta-single-tta.ipynb Fully Standalone
 
 ### Updated

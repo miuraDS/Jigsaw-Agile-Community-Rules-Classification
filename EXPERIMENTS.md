@@ -225,6 +225,7 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 | 2025-10-22 | deberta-large-2epochs-1hr | Original DeBERTa | **0.917** | **Best score** - Simple DeBERTa ensemble |
 | 2025-10-22 | deberta-large-2epochs-1hr_v2 | Enhanced DeBERTa V2 | 0.914 | Enhanced features but lower score |
 | 2025-10-22 | deberta-large-optimized | Optimized DeBERTa | 0.916 | Conservative optimizations, no improvement |
+| 2025-10-23 | deberta-single-tta | Seed TTA | 0.906 | Single model + seeds performed poorly |
 
 ---
 
@@ -334,8 +335,7 @@ Combine the two best-performing approaches instead of choosing between them:
 **Date**: 2025-10-23
 **Version**: Single Model + TTA
 **Notebook**: `notebooks/deberta-single-tta.ipynb`
-**Score (Column-averaged AUC)**: **TBD** (Expected: 0.918-0.919)
-**Status**: ✅ **READY TO RUN**
+**Score (Column-averaged AUC)**: **0.906**
 
 #### Strategy:
 **Simplicity + Diversity** - Train the best single model multiple times with different seeds
@@ -368,15 +368,26 @@ All using Experiment 7's proven config:
 - Ensemble of same model trained differently reduces variance
 - Proven approach (Exp 7 config) repeated 3x, not modified
 
-#### Expected Performance:
-- **Target**: 0.918-0.919 AUC
-- **Expected Gain**: +0.001-0.002 over current best (0.917)
-- **Risk Level**: Very Low (same proven config, just repeated)
-- **Confidence**: Medium (seed diversity should help, but gains may be modest)
+#### Actual Performance:
+- **Score**: 0.906 AUC
+- **Expected**: 0.918-0.919 AUC
+- **Result**: Score **decreased by -0.011 points** vs. Experiment 7 (0.917)
+- **Analysis**: Seed ensemble significantly underperformed baseline
 
 #### Credits:
 - Based entirely on Experiment 7 (itahiro's DeBERTa - 0.917 AUC)
 - Modification: Train 3x with different seeds instead of 1x
+
+#### Notes:
+- **Unexpected failure**: Seed ensemble performed much worse than single seed
+- **Possible reasons**:
+  - Equal-weight ensemble may not be optimal (some seeds may be weak)
+  - Training only DeBERTa (no DistilRoBERTa, DeBERTa AUC) reduced diversity
+  - Exp 7 uses 5-model ensemble, not single-model repeated
+  - Rank normalization 3 times (once per seed) may have distorted predictions
+  - Different seeds may have found worse local optima
+- **Key lesson**: Single model repeated ≠ Multi-model ensemble
+- **Takeaway**: Model diversity > Seed diversity for this competition
 
 ---
 
