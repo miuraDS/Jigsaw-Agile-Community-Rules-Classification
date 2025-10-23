@@ -2,6 +2,86 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-23 00:00:00 JST] - Created: Two New Improvement Strategies
+
+### Added
+- **Experiment 10**: `notebooks/deberta-qwen-mega-ensemble.ipynb` (Strategy A - Mega-Ensemble)
+- **Experiment 11**: `notebooks/deberta-single-tta.ipynb` (Strategy B - Seed TTA)
+- Two distinct approaches to improve upon current best (0.917 AUC)
+
+### Strategy Analysis
+
+After analyzing all 9 past experiments, identified clear patterns:
+- **What works**: Simple approaches (Exp 7: 0.917)
+- **What doesn't**: Over-optimization (Exp 8, 9: 0.914-0.916)
+- **Key insight**: Tight competition margins (0.914-0.917 range)
+
+### Strategy A: Mega-Ensemble (Experiment 10)
+
+**Approach**: Combine two best-performing methods instead of choosing between them
+
+#### Configuration:
+- **Stage 1**: Create within-method ensembles
+  - DeBERTa ensemble (Exp 7): 3 models → single prediction
+  - Qwen ensemble (Exp 1): 3 models → single prediction
+- **Stage 2**: Meta-ensemble
+  - Blend both: 55% DeBERTa + 45% Qwen
+  - Total: 6 distinct model predictions
+
+#### Rationale:
+- Experiment 7 (DeBERTa - 0.917) + Experiment 1 (Qwen - 0.916) are both strong
+- Different architectures (transformer vs LLM) likely capture complementary patterns
+- Diversity principle: Combining proven approaches should boost performance
+
+#### Expected Performance:
+- Target: 0.918-0.920 AUC
+- Risk: Low (both methods validated)
+- Confidence: Medium-High
+
+### Strategy B: Seed TTA (Experiment 11)
+
+**Approach**: Keep it simple, add diversity through different random seeds
+
+#### Configuration:
+- Train DeBERTa v3 (best single model) **3 times**
+- Seeds: 42 (baseline), 123, 456
+- Use Experiment 7's exact proven config (3 epochs, LR=2e-5, no changes)
+- Equal-weight ensemble of 3 predictions
+
+#### Rationale:
+- Experiment 7 (simple) beat Experiment 9 (optimized)
+- Lesson: Don't change what works, just add variance reduction
+- Different seeds → different local optima → better ensemble
+- Training-time augmentation without added complexity
+
+#### Expected Performance:
+- Target: 0.918-0.919 AUC
+- Risk: Very Low (same proven config, just repeated)
+- Confidence: Medium (gains may be modest but safe)
+
+### Design Philosophy
+
+Both strategies learned from past failures:
+1. **No over-optimization**: Don't modify proven configs (Exp 9 lesson)
+2. **Leverage what works**: Build on Exp 7 (0.917) and Exp 1 (0.916)
+3. **Add diversity, not complexity**: Different models OR different seeds
+4. **Low-risk approaches**: Both use validated components
+
+### Credits and Attribution
+- **Strategy A**: Combines Exp 7 (itahiro's DeBERTa) + Exp 1 (Qwen ensemble)
+- **Strategy B**: Pure Exp 7 (itahiro's DeBERTa), just trained 3x with different seeds
+
+### Next Steps
+1. Upload both notebooks to Kaggle
+2. Run experiments and compare results
+3. Identify which strategy works better
+4. Record actual scores in EXPERIMENTS.md
+
+### Documentation
+- Added Experiment 10 and 11 to EXPERIMENTS.md
+- Detailed configuration and rationale for each
+- Clear credits to original work
+
 ## [2025-10-22 18:00:00 JST] - Experiment Results: Optimized DeBERTa Ensemble
 
 ### Recorded

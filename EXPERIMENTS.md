@@ -284,6 +284,102 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 
 ---
 
+### Experiment 10: DeBERTa + Qwen Mega-Ensemble (Strategy A)
+**Date**: 2025-10-23
+**Version**: Mega-Ensemble
+**Notebook**: `notebooks/deberta-qwen-mega-ensemble.ipynb`
+**Score (Column-averaged AUC)**: **TBD** (Expected: 0.918-0.920)
+**Status**: ✅ **READY TO RUN**
+
+#### Strategy:
+Combine the two best-performing approaches instead of choosing between them:
+- **Experiment 7** (DeBERTa ensemble - 0.917 AUC)
+- **Experiment 1** (Qwen ensemble - 0.916 AUC)
+
+#### Model Configuration:
+**Two-Stage Ensemble:**
+
+**Stage 1 - Within-Method Ensembles:**
+- **DeBERTa ensemble**: DeBERTa v3, DistilRoBERTa, DeBERTa AUC (weights: 0.625, 0.125, 0.25)
+- **Qwen ensemble**: Qwen 0.5B, Qwen 14B, Qwen3 Embeddings (weights: 0.5, 0.2, 0.3)
+
+**Stage 2 - Meta-Ensemble:**
+- Blend both ensemble outputs: 55% DeBERTa + 45% Qwen
+- Total: 6 distinct model predictions combined
+
+#### Key Features:
+- **Leverages diversity** from two proven approaches ✨
+- **Two-stage blending** for optimal weight distribution ✨
+- **Complementary strengths**: DeBERTa (transformer) + Qwen (LLM) ✨
+- **Low risk**: Both base methods are validated ✨
+
+#### Rationale:
+- Experiment 7 and Experiment 1 likely capture different patterns
+- Combining them should boost performance through diversity
+- Both scored ~0.916-0.917, so meta-ensemble should reach 0.918-0.920
+
+#### Expected Performance:
+- **Target**: 0.918-0.920 AUC
+- **Expected Gain**: +0.001-0.003 over current best (0.917)
+- **Risk Level**: Low (both methods proven)
+- **Confidence**: Medium-High (diversity principle is sound)
+
+#### Credits:
+- Experiment 7 (itahiro's DeBERTa ensemble - 0.917 AUC)
+- Experiment 1 (Qwen multi-model ensemble - 0.916 AUC)
+
+---
+
+### Experiment 11: DeBERTa Single Model with Seed TTA (Strategy B)
+**Date**: 2025-10-23
+**Version**: Single Model + TTA
+**Notebook**: `notebooks/deberta-single-tta.ipynb`
+**Score (Column-averaged AUC)**: **TBD** (Expected: 0.918-0.919)
+**Status**: ✅ **READY TO RUN**
+
+#### Strategy:
+**Simplicity + Diversity** - Train the best single model multiple times with different seeds
+
+**Key Insight:**
+- Experiment 7 (simple, 3 epochs) → **0.917** ✅
+- Experiment 9 (optimized, 4 epochs) → 0.916 ❌
+- **Lesson**: Simple works better, but can we add diversity without complexity?
+
+#### Model Configuration:
+Train DeBERTa v3 base **3 times** with different random seeds:
+1. Seed 42 (Experiment 7 baseline)
+2. Seed 123
+3. Seed 456
+
+All using Experiment 7's proven config:
+- 3 epochs, LR=2e-5, MAX_LENGTH=512, batch_size=8
+- Warmup=0.1, weight_decay=0.01
+- URL semantics extraction
+
+#### Key Features:
+- **Same model, different initializations** → Different local optima ✨
+- **No complexity added** → Keeps training simple ✨
+- **Variance reduction** → More stable predictions ✨
+- **Training-time TTA** → Like test-time augmentation but at training level ✨
+
+#### Rationale:
+- Different seeds lead to different weight initializations
+- Each training run finds a slightly different optimum
+- Ensemble of same model trained differently reduces variance
+- Proven approach (Exp 7 config) repeated 3x, not modified
+
+#### Expected Performance:
+- **Target**: 0.918-0.919 AUC
+- **Expected Gain**: +0.001-0.002 over current best (0.917)
+- **Risk Level**: Very Low (same proven config, just repeated)
+- **Confidence**: Medium (seed diversity should help, but gains may be modest)
+
+#### Credits:
+- Based entirely on Experiment 7 (itahiro's DeBERTa - 0.917 AUC)
+- Modification: Train 3x with different seeds instead of 1x
+
+---
+
 ## Future Experiments
 
 ### Experiment 6: LB 0.916 + 5 Enhancements (IMPROVED Version)
