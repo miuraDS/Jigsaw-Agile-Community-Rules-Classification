@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-22 18:00:00 JST] - Experiment Results: Optimized DeBERTa Ensemble
+
+### Recorded
+- **Experiment 9**: `notebooks/deberta-large-optimized.ipynb` scored **0.916 AUC**
+
+### Performance Analysis
+**Result**: Did not improve over baseline
+- **Expected**: 0.92-0.925 AUC
+- **Actual**: 0.916 AUC
+- **Comparison**: -0.001 vs. Experiment 7 (0.917), essentially unchanged
+
+### Key Findings
+**What Didn't Work:**
+1. **Additional training epoch** (3→4): May have caused slight overfitting
+2. **Subreddit context in prompts**: Did not add measurable value
+3. **Ensemble weight adjustments**: [0.48, 0.12, 0.08, 0.12, 0.20] vs. [0.5, 0.1, 0.1, 0.1, 0.2] showed no improvement
+4. **Cumulative effect**: Multiple small changes may have had negative interactions
+
+### Important Lessons
+1. **Baseline was already well-tuned**: Experiment 7's simple 3-epoch approach was optimal
+2. **Even conservative changes can hurt**: Small adjustments accumulate unpredictably
+3. **Prompt engineering limits**: Adding context doesn't always help
+4. **Optimization difficulty**: This competition has very tight margins (0.914-0.917 range)
+
+### Insights for Future Work
+- **Keep Experiment 7 unchanged**: It remains the best performer (0.917 AUC)
+- **Try different directions**: Instead of tweaking training, consider:
+  - Different model architectures (not just DeBERTa variants)
+  - Alternative ensemble methods (stacking, blending with different metrics)
+  - Data augmentation techniques
+  - Different preprocessing approaches
+- **Test individually**: Any future optimization should be tested one variable at a time
+
+### Updated
+- EXPERIMENTS.md: Added actual score and analysis for Experiment 9
+- Performance History table: Added Experiment 9 entry
+- Updated best configuration: Experiment 7 remains champion
+
 ## [2025-10-22 12:00:00 JST] - Created: Optimized DeBERTa Ensemble (Expected Best)
 
 ### Added

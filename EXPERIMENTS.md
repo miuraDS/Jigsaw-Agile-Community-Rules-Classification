@@ -222,17 +222,17 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 | N/A | [LB 0.916] Preprocessing + Qwen Hybrid Ensemble | Hybrid Ensemble | 0.915 | Kaggle-style preprocessing + Qwen hybrid ensemble |
 | 2025-10-18 | [LB 0.916] Preprocessing + Qwen Hybrid Ensemble | Hybrid Ensemble v2 | 0.914 | Enhanced cleaning + embedding fine-tuning |
 | 2025-10-19 | jigsaw-pseudo-training-llama-3-2-3b-instruct-read | Pseudo-Training | 0.916 | Pseudo-labeling with Llama 3.2 3B |
-| 2025-10-22 | deberta-large-2epochs-1hr | Original DeBERTa | **0.917** | **New best score** - DeBERTa ensemble |
-| 2025-10-22 | deberta-large-2epochs-1hr_v2 | Enhanced DeBERTa | 0.914 | Enhanced features but lower score |
+| 2025-10-22 | deberta-large-2epochs-1hr | Original DeBERTa | **0.917** | **Best score** - Simple DeBERTa ensemble |
+| 2025-10-22 | deberta-large-2epochs-1hr_v2 | Enhanced DeBERTa V2 | 0.914 | Enhanced features but lower score |
+| 2025-10-22 | deberta-large-optimized | Optimized DeBERTa | 0.916 | Conservative optimizations, no improvement |
 
 ---
 
-### Experiment 9: DeBERTa Large Optimized (Expected Best)
+### Experiment 9: DeBERTa Large Optimized
 **Date**: 2025-10-22
 **Version**: Optimized Ensemble
 **Notebook**: `notebooks/deberta-large-optimized.ipynb`
-**Score (Column-averaged AUC)**: **TBD** (Expected: 0.92-0.925)
-**Status**: ✅ **READY TO RUN**
+**Score (Column-averaged AUC)**: **0.916**
 
 #### Model Configuration:
 - **Base Models**:
@@ -259,11 +259,11 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 - Avoided pitfalls: no class balancing, no excessive training, no long sequences
 - Balanced ensemble to leverage model diversity
 
-#### Expected Performance:
-- **Target**: 0.92-0.925 AUC
-- **Expected Gain**: +0.3-0.8 percentage points over current best (0.917)
-- **Risk Level**: Low-Medium (conservative optimizations)
-- **Confidence**: High (all techniques individually validated)
+#### Actual Performance:
+- **Score**: 0.916 AUC
+- **Expected**: 0.92-0.925 AUC
+- **Result**: Score decreased by -0.001 points vs. Experiment 7 (0.917)
+- **Analysis**: Optimizations did not improve performance as expected
 
 #### Credits:
 - Based on itahiro's DeBERTa ensemble (Experiment 7, 0.917 AUC)
@@ -274,8 +274,13 @@ This file tracks experiment results for the Jigsaw Agile Community Rules Classif
 #### Notes:
 - Carefully designed to avoid V2's pitfalls
 - All improvements are small, incremental, and proven
-- Expected to be new best performer
-- Ready for Kaggle submission
+- **Result**: Did not improve over baseline (0.916 vs 0.917)
+- **Possible reasons**:
+  - Additional training epoch (4 vs 3) may have caused slight overfitting
+  - Subreddit context in prompts may not have added value
+  - Ensemble weight changes may have been suboptimal
+  - The +1 epoch increase had negative cumulative effect
+- **Lesson**: Even conservative changes can hurt performance; baseline was already well-tuned
 
 ---
 
