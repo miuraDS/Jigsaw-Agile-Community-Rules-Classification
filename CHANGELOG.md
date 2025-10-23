@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025-10-23 01:00:00 JST] - Completed: Made deberta-single-tta.ipynb Fully Standalone
+
+### Updated
+- **Experiment 11**: `notebooks/deberta-single-tta.ipynb` is now **complete and runnable**
+- Fully self-contained notebook with all training code embedded
+- No external dependencies or prerequisite notebooks required
+
+### Implementation Details
+The complete notebook now includes:
+1. **Utils module**: URL semantic extraction, data loading functions
+2. **Training function**: Full training loop with configurable seeds
+3. **Three training runs**: Seeds 42, 123, 456 (all in one notebook)
+4. **Ensemble logic**: Rank normalization and equal-weight blending
+5. **Clear structure**: Markdown explanations between each step
+
+### Notebook Structure:
+- Cell 1: Utils.py (URL semantics, data preparation)
+- Cell 2: Training function with seed control
+- Cells 3-5: Train with seeds 42, 123, 456
+- Cell 6: Ensemble predictions and create submission
+- Markdown: Clear explanations and expected performance
+
+### Why This Approach:
+- **Complete**: No need to run other notebooks first
+- **Simple**: Just one model type (DeBERTa v3)
+- **Proven**: Uses Experiment 7's exact config (0.917 AUC)
+- **Safe**: Low risk, just adds seed diversity
+
+### Status
+- **Experiment 11**: ✅ Ready to run on Kaggle
+- **Experiment 10** (Mega-ensemble): Kept as meta-ensemble only (requires running Exp 7 first)
+
 ## [2025-10-23 00:00:00 JST] - Created: Two New Improvement Strategies
 
 ### Added
